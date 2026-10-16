@@ -1,0 +1,40 @@
+[package]
+name = "rustspeak"
+version = "0.1.0"
+edition = "2021"
+description = "Windows GUI client for the TeamSpeak 3 protocol (Tauri v2)"
+
+[[bin]]
+name = "rustspeak"
+path = "src/main.rs"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+ts3-client = { path = ".." }
+tsproto.workspace = true
+tauri = { version = "2", features = [] }
+tauri-plugin-opener = "2"
+serde.workspace = true
+serde_json.workspace = true
+anyhow.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+cpal = "0.15"
+audiopus = "0.3.0-rc.0"
+nnnoiseless = "0.5"
+image = { version = "0.25", default-features = false, features = ["jpeg"] }
+base64 = "0.22"
+
+[target.'cfg(windows)'.dependencies]
+openh264 = "0.9"
+windows-capture = "2"
+windows-sys = { version = "0.59", features = ["Win32_UI_Input_KeyboardAndMouse"] }
+xcap = "0.9"
+
+[features]
+# Serve the embedded `ui/` folder (what `tauri build` would enable); lets plain `cargo run` work.
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]

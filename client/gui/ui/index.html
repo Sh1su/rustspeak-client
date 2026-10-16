@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RustSpeak</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="controls.css">
+  <link rel="stylesheet" href="windows.css">
+  <link rel="stylesheet" href="video.css">
+</head>
+<body>
+  <nav class="menubar">
+    <button class="menu-btn" data-menu="connections">Verbindungen</button>
+    <button class="menu-btn" data-menu="bookmarks">Favoriten</button>
+    <button class="menu-btn" data-menu="rights">Rechte</button>
+    <button class="menu-btn" data-menu="extras">Extras</button>
+    <div class="tb-spacer"></div>
+    <div id="ping" class="ping" title="Ping"></div>
+    <img class="corner-logo" src="logo.svg" alt="RustSpeak" title="RustSpeak">
+  </nav>
+  <header class="toolbar">
+    <button id="btn-connect" class="tool-btn" title="Mit Server verbinden"><span class="ti" data-icon="plug"></span><span class="tl">Verbinden</span></button>
+    <button id="btn-disconnect" class="tool-btn" title="Verbindung trennen" disabled><span class="ti" data-icon="unplug"></span><span class="tl">Trennen</span></button>
+    <div class="tb-sep"></div>
+    <button id="btn-mic" class="tool-btn" title="Mikrofon stummschalten (Strg+M)"><span class="ti"></span><span class="tl">Mikrofon</span></button>
+    <button id="btn-speaker" class="tool-btn" title="Lautsprecher stummschalten (Strg+D)"><span class="ti"></span><span class="tl">Lautsprecher</span></button>
+    <button id="btn-away" class="tool-btn" title="Abwesend" disabled><span class="ti" data-icon="moon"></span><span class="tl">Abwesend</span></button>
+    <div class="tb-sep"></div>
+    <button id="btn-settings" class="tool-btn" title="Einstellungen"><span class="ti" data-icon="settings"></span><span class="tl">Einstellungen</span></button>
+  </header>
+
+  <nav id="server-tabs" class="server-tabs"></nav>
+
+  <main class="layout">
+    <section class="panel tree-panel">
+      <div class="panel-head">
+        <span id="server-title">Nicht verbunden</span>
+        <button id="btn-new-channel" class="mini-btn" title="Channel erstellen" disabled><span data-icon="plus"></span></button>
+      </div>
+      <div id="tree" class="tree"></div>
+    </section>
+
+    <div class="splitter" id="split-v"></div>
+
+    <section class="panel right-col">
+      <a id="banner" class="banner" hidden><img id="banner-img" alt=""></a>
+      <div id="info" class="info"></div>
+      <div id="stage" class="stage" hidden></div>
+    </section>
+  </main>
+
+  <div class="splitter-h" id="split-h"></div>
+  <section class="chat-panel">
+    <nav id="tabs" class="tabs"></nav>
+    <div id="messages" class="messages"></div>
+    <form id="chat-form" class="chat-input">
+      <input id="chat-text" type="text" autocomplete="off" placeholder="Nicht verbunden" disabled>
+      <button class="tb-btn primary" type="submit" id="chat-send" disabled><span data-icon="send"></span></button>
+    </form>
+  </section>
+
+  <footer class="statusbar">
+    <span id="status-dot" class="dot off"></span>
+    <span id="status-text">Nicht verbunden</span>
+    <div class="tb-spacer"></div>
+    <span id="audio-error" class="audio-error" hidden></span>
+    <span id="mode-label" class="mode-label"></span>
+    <div class="meter" title="Mikrofonpegel"><div id="meter-bar" class="meter-bar"></div><div id="meter-thr" class="meter-thr"></div></div>
+  </footer>
+
+  <div id="ctx" class="ctx" hidden></div>
+  <div id="ctx-sub" class="ctx" hidden></div>
+  <div id="toasts" class="toasts"></div>
+  <div id="drag-ghost" class="drag-ghost" hidden></div>
+  <input type="file" id="file-input" accept="image/*" hidden>
+
+  <!-- Connect dialog -->
+  <dialog id="dlg-connect" class="dlg">
+    <form method="dialog" id="form-connect">
+      <h2><span data-icon="plug"></span>Verbinden</h2>
+      <label>Serveradresse<input name="server" required placeholder="z. B. 127.0.0.1 oder ts.example.org:9987"></label>
+      <label>Spitzname<input name="nickname" required minlength="3" maxlength="30"></label>
+      <label>Server-Passwort<input name="password" type="password" autocomplete="off"></label>
+      <details>
+        <summary>Erweitert</summary>
+        <label>Standardchannel<input name="channel" placeholder="Channelname oder /ID"></label>
+        <label>Channel-Passwort<input name="channel_password" type="password" autocomplete="off"></label>
+      </details>
+      <label class="check"><input type="checkbox" name="new_tab"><span>In neuem Server-Tab öffnen</span></label>
+      <label class="check"><input type="checkbox" name="bookmark"><span>Zu Favoriten hinzufügen</span></label>
+      <div class="dlg-actions">
+        <button value="cancel" formnovalidate class="tb-btn">Abbrechen</button>
+        <button value="ok" class="tb-btn primary">Verbinden</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Generic form dialog (filled by JS) -->
+  <dialog id="dlg-form" class="dlg">
+    <form method="dialog" id="form-generic">
+      <h2 id="form-title"></h2>
+      <div id="form-fields" class="form-fields"></div>
+      <div class="dlg-actions">
+        <button value="cancel" formnovalidate class="tb-btn" id="form-cancel">Abbrechen</button>
+        <button value="ok" class="tb-btn primary" id="form-ok">OK</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Rights window -->
+  <dialog id="dlg-perms" class="dlg xwide perms-win">
+    <div class="perm-wrap">
+      <div class="perm-head">
+        <h2><span data-icon="shield"></span><span id="perm-title">Rechte</span></h2>
+        <div class="tb-spacer"></div>
+        <label class="switch small"><input type="checkbox" id="perm-expert"><span class="sw"></span><span class="sw-label">Expertenansicht</span></label>
+        <button class="mini-btn" id="perm-close" title="Schließen"><span data-icon="close"></span></button>
+      </div>
+      <nav class="perm-kind-tabs">
+        <button type="button" class="perm-kind-tab active" data-kind="server"><span data-icon="shield"></span>Server Gruppen</button>
+        <button type="button" class="perm-kind-tab" data-kind="channel"><span data-icon="users"></span>Channel Gruppen</button>
+      </nav>
+      <div class="perm-body">
+        <aside class="perm-groups">
+          <div id="perm-group-list" class="perm-group-list"></div>
+          <div class="perm-group-actions">
+            <button class="tb-btn" id="pg-add" title="Neue Gruppe"><span data-icon="plus"></span></button>
+            <button class="tb-btn" id="pg-rename" title="Umbenennen"><span data-icon="edit"></span></button>
+            <button class="tb-btn" id="pg-copy" title="Gruppe kopieren"><span data-icon="copy"></span></button>
+            <button class="tb-btn" id="pg-del" title="Löschen"><span data-icon="close"></span></button>
+          </div>
+        </aside>
+        <section class="perm-main">
+          <div id="perm-group-head" class="perm-group-head"></div>
+          <div class="perm-toolbar" id="perm-search-wrap">
+            <input id="perm-search" type="search" placeholder="Rechte durchsuchen …">
+            <label class="check"><input type="checkbox" id="perm-only-set"><span>Nur gesetzte</span></label>
+          </div>
+          <div id="perm-table" class="perm-table"></div>
+          <div class="perm-foot"><span class="hint" id="perm-pending"></span><div class="tb-spacer"></div>
+            <button class="tb-btn" id="perm-discard" disabled>Verwerfen</button>
+            <button class="tb-btn primary" id="perm-apply" disabled>Anwenden</button></div>
+        </section>
+        <aside class="perm-side">
+          <label class="opt-row">Suchen<input id="pm-search" type="search"></label>
+          <div id="perm-members" class="perm-members"></div>
+          <div class="row-btns"><button class="tb-btn small" id="pm-add">Hinzufügen</button><button class="tb-btn small" id="pm-remove" disabled>Entfernen</button></div>
+        </aside>
+      </div>
+      <div class="perm-bottom"><button class="tb-btn primary" id="perm-refresh">Aktualisieren</button><div class="tb-spacer"></div><button class="tb-btn primary" onclick="document.getElementById('dlg-perms').close()">Schließen</button></div>
+    </div>
+  </dialog>
+
+  <!-- Settings window -->
+  <dialog id="dlg-settings" class="dlg xwide opt-win">
+    <div class="opt-wrap">
+      <div class="opt-titlebar"><span data-icon="settings"></span>Optionen</div>
+      <div class="opt-layout">
+        <nav id="opt-nav" class="opt-nav"></nav>
+        <div class="opt-content">
+          <div id="opt-head" class="opt-head"></div>
+          <div id="opt-body" class="opt-body"></div>
+        </div>
+      </div>
+      <div class="opt-foot">
+        <button class="tb-btn primary" id="opt-ok">OK</button>
+        <button class="tb-btn primary" id="opt-cancel">Abbrechen</button>
+        <button class="tb-btn" id="opt-apply">Anwenden</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="icons.js"></script>
+  <script src="sounds.js"></script>
+  <script src="app.js"></script>
+  <script src="video.js"></script>
+  <script src="settings.js"></script>
+  <script src="i18n.js"></script>
+</body>
+</html>

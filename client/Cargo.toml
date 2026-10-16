@@ -1,0 +1,19 @@
+[package]
+name = "ts3-client"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "ts3-client"
+path = "src/main.rs"
+
+[dependencies]
+tsproto.workspace = true
+anyhow.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+clap.workspace = true
+rand.workspace = true
+base64.workspace = true
+sha1.workspace = true

@@ -1,0 +1,1 @@
+{"default":{"identifier":"default","description":"Main window: core APIs (events, window) for the RustSpeak UI","local":true,"windows":["main"],"permissions":["core:default","opener:default","core:window:allow-set-always-on-top","core:window:allow-maximize","core:window:allow-unmaximize","core:window:allow-is-maximized"]}}

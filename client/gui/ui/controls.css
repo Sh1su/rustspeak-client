@@ -1,0 +1,127 @@
+/* ============================================================= menu bar, tool row, banner, icons */
+.menubar { display: flex; align-items: center; gap: 2px; padding: 4px 10px; background: var(--bg-2); border-bottom: 1px solid var(--line); }
+.menubar .brand { margin-right: 12px; }
+.menu-btn { border: 0; background: transparent; padding: 6px 12px; border-radius: 7px; cursor: pointer; color: var(--text-2); }
+.menu-btn:hover, .menu-btn.open { background: var(--bg-4); color: var(--text); }
+.toolbar { gap: 6px; padding: 6px 10px; }
+.tool-btn {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  min-width: 74px; height: 50px; padding: 4px 10px; border: 1px solid transparent; border-radius: 9px;
+  background: transparent; cursor: pointer; color: var(--text-2); transition: background .12s, color .12s, border-color .12s;
+}
+.tool-btn .ti .ic { width: 22px; height: 22px; }
+.tool-btn .tl { font-size: 11.5px; }
+.tool-btn:hover:not(:disabled) { background: var(--bg-3); color: var(--text); border-color: var(--line); }
+.tool-btn:disabled { opacity: .4; cursor: default; }
+.tool-btn.active-bad { background: rgba(248, 113, 113, .14); border-color: rgba(248, 113, 113, .45); color: var(--bad); }
+.tool-btn.active-warn { background: rgba(251, 191, 36, .13); border-color: rgba(251, 191, 36, .42); color: var(--warn); }
+.ping { padding-right: 4px; }
+
+.banner { display: block; flex: none; max-height: 140px; overflow: hidden; background: #000; border-bottom: 1px solid var(--line); text-align: center; }
+.banner img { display: block; width: 100%; height: auto; max-height: 140px; object-fit: cover; object-position: center; }
+.banner.mode-1 img { width: 100%; height: 120px; object-fit: fill; }
+.banner.mode-2 img { width: 100%; height: auto; object-fit: cover; }
+.banner.mode-0 img { width: 100%; object-fit: cover; }
+
+.ico { width: 16px; height: 16px; flex: none; display: inline-block; vertical-align: middle; }
+.ico-missing { border-radius: 3px; background: var(--bg-4); }
+.gchip { display: inline-flex; align-items: center; gap: 5px; padding: 1px 7px 1px 5px; margin: 1px 2px 1px 0; border-radius: 6px; background: var(--bg-3); border: 1px solid var(--line); font-size: 12px; }
+.kbd { margin-left: auto; color: var(--text-3); font-size: 12px; }
+.node.client.multi { background: rgba(124, 92, 255, .22); box-shadow: inset 2px 0 0 var(--accent-2); }
+
+/* spacer channels */
+.node.spacer { padding-left: 10px; padding-right: 10px; color: var(--text-3); gap: 0; overflow: hidden; }
+.node.spacer .sp-text { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.node.spacer.sp-c .sp-text { text-align: center; }
+.node.spacer.sp-r .sp-text { text-align: right; }
+.node.spacer.sp-fill .sp-fill { flex: 1; overflow: hidden; white-space: nowrap; letter-spacing: 1px; color: var(--text-3); }
+
+/* icon picker */
+.icon-grid { display: flex; flex-wrap: wrap; gap: 6px; }
+.icon-cell { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 9px; border: 1px solid var(--line); background: var(--bg); cursor: pointer; color: var(--text-3); }
+.icon-cell:hover { border-color: var(--accent); background: var(--bg-3); }
+.icon-cell.active { border-color: var(--accent); box-shadow: 0 0 0 2px rgba(79, 124, 255, .35); }
+.icon-cell .ico { width: 22px; height: 22px; }
+.icon-grid.big .icon-tile { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px; border-radius: 9px; border: 1px solid var(--line); background: var(--bg); min-width: 84px; }
+.icon-grid.big .ico { width: 28px; height: 28px; }
+.icon-field { display: flex; align-items: center; gap: 10px; }
+.icon-preview { min-width: 28px; display: grid; place-items: center; }
+.icon-preview .ico { width: 22px; height: 22px; }
+.row-btns { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.group-checks { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; }
+.gcheck span { display: inline-flex; align-items: center; gap: 6px; }
+code { font-family: Consolas, monospace; font-size: 12px; background: var(--bg); padding: 1px 4px; border-radius: 4px; }
+
+/* connection info */
+.ci-body { max-height: 62vh; overflow: auto; user-select: text; }
+table.ci { width: 100%; border-collapse: collapse; margin-bottom: 14px; font-size: 13px; font-variant-numeric: tabular-nums; }
+table.ci th { text-align: left; color: var(--text-3); font-weight: 600; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+table.ci td { padding: 4px 8px; border-bottom: 1px solid rgba(43, 48, 64, .5); }
+table.ci td.k { color: var(--text-2); width: 38%; }
+table.ci tr.sub-h td { padding-top: 10px; color: var(--accent); font-weight: 650; border-bottom: 1px solid var(--line); }
+table.ci .ind { padding-left: 14px; color: var(--text-3); }
+
+/* ============================================================= custom form controls */
+/* Slider: thin track, filled part in the accent gradient, round knob */
+input[type=range] {
+  -webkit-appearance: none; appearance: none; width: 100%; height: 22px; background: transparent; cursor: pointer; --fill: 50%;
+  accent-color: initial;
+}
+input[type=range]:focus { outline: none; }
+input[type=range]::-webkit-slider-runnable-track {
+  height: 6px; border-radius: 3px;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) var(--fill), var(--bg-4) var(--fill), var(--bg-4) 100%);
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none; width: 16px; height: 16px; margin-top: -5px; border-radius: 50%;
+  background: #fff; border: 3px solid var(--accent-2); box-shadow: 0 2px 6px rgba(0, 0, 0, .45); transition: transform .1s, box-shadow .1s;
+}
+input[type=range]:hover::-webkit-slider-thumb { transform: scale(1.15); }
+input[type=range]:active::-webkit-slider-thumb { transform: scale(1.25); box-shadow: 0 0 0 6px rgba(124, 92, 255, .25); }
+input[type=range]:focus-visible::-webkit-slider-thumb { box-shadow: 0 0 0 4px rgba(79, 124, 255, .35); }
+
+/* Dropdown: own arrow, dark surface */
+select {
+  -webkit-appearance: none; appearance: none; cursor: pointer;
+  min-height: 36px; padding: 6px 34px 6px 10px;
+  background-color: var(--bg);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c8cff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center; background-size: 16px;
+  border: 1px solid var(--line); border-radius: 8px; color: var(--text);
+  transition: border-color .12s, box-shadow .12s;
+}
+.dlg select { padding-right: 34px; }
+select:hover { border-color: #3a4155; }
+select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(79, 124, 255, .2); outline: none; }
+select:disabled { opacity: .4; cursor: default; }
+select option { background: var(--bg-2); color: var(--text); }
+.perm-row select.p-val { min-height: 28px; height: 28px; padding: 0 30px 0 8px; font-size: 13px; }
+
+/* Checkbox: rounded square with accent fill and a white tick */
+input[type=checkbox] {
+  -webkit-appearance: none; appearance: none; width: 18px; height: 18px; flex: none; margin: 0;
+  border: 2px solid #4a5168; border-radius: 5px; background: var(--bg); cursor: pointer;
+  display: inline-grid; place-content: center; transition: background .12s, border-color .12s, box-shadow .12s;
+}
+.dlg input[type=checkbox], .perm-row input[type=checkbox] { width: 18px; height: 18px; }
+input[type=checkbox]::before {
+  content: ""; width: 10px; height: 10px; transform: scale(0); transition: transform .12s ease-out;
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%); background: #fff;
+}
+input[type=checkbox]:hover { border-color: var(--accent); }
+input[type=checkbox]:checked { background: linear-gradient(135deg, var(--accent), var(--accent-2)); border-color: transparent; }
+input[type=checkbox]:checked::before { transform: scale(1); }
+input[type=checkbox]:indeterminate { background: var(--bg-4); border-color: var(--accent); }
+input[type=checkbox]:indeterminate::before { transform: scale(1); clip-path: none; height: 2px; width: 9px; border-radius: 1px; background: var(--accent); }
+input[type=checkbox]:focus-visible { box-shadow: 0 0 0 3px rgba(79, 124, 255, .3); outline: none; }
+input[type=checkbox]:disabled { opacity: .4; cursor: default; }
+
+/* focus ring in the accent colour instead of the browser default */
+button:focus { outline: none; }
+.tb-btn:focus-visible, .tool-btn:focus-visible, .menu-btn:focus-visible, .mini-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+/* the dialog rule in style.css uses the `background` shorthand; restore the arrow there */
+.dlg select, select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237c8cff' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center; background-size: 16px;
+}
